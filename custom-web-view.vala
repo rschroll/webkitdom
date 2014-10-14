@@ -14,33 +14,31 @@ public class CustomWebView : WebKit.WebView {
     }
     </style></head>
     <body></body></html>""";
+    private const string JAVASCRIPT = """
+        var el = document.createElement("div");
+        el.appendChild(document.createTextNode("%i"));
+        el.setAttribute("style", "background: %s; left: %i; top: %i;");
+        el.id = "%i";
+        el.onclick = function () { document.title = "div-clicked %i"; };
+        document.body.insertBefore(el);""";
     
     private int count = 0;
     
     public CustomWebView() {
-        load_string(HTML, "text/html", "UTF8", "");
+        load_html(HTML, null);
+        notify["title"].connect(on_title_changed);
     }
     
     public void add_div(string color) {
         int x = Random.int_range(0, 300),
             y = Random.int_range(0, 300);
         count += 1;
-        WebKit.DOM.Document doc = get_dom_document();
-        try {
-            WebKit.DOM.Element el = doc.create_element("div");
-            el.append_child(doc.create_text_node(@"$count"));
-            el.set_attribute("style", @"background: $color; left: $x; top: $y;");
-            el.set_attribute("id", @"$count");
-            ((WebKit.DOM.EventTarget) el).add_event_listener("click", (Callback) on_div_clicked,
-                false, this);
-            doc.body.insert_before(el, null);
-        } catch (Error error) {
-            warning("Oh noes: %s", error.message);
-        }
+        run_javascript.begin(JAVASCRIPT.printf(count, color, x, y, count, count), null);
     }
     
-    private static void on_div_clicked(WebKit.DOM.Element element, WebKit.DOM.Event event,
-        CustomWebView view) {
-        view.div_clicked(element.get_attribute("id"));
+    private void on_title_changed(ParamSpec p) {
+        string[] args = title.split(" ", 2);
+        if (args[0] == "div-clicked")
+            div_clicked(args[1]);
     }
 }
