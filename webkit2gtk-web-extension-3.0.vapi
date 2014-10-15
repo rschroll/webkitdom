@@ -3719,6 +3719,7 @@ namespace WebKit {
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_event_target_get_type ()")]
 		[GIR (name = "DOMEventTarget")]
 		public interface EventTarget : GLib.Object {
+			public abstract bool add_event_listener (string event_name, GLib.Callback handler, bool use_capture, GLib.Object? object);
 			public bool add_event_listener_with_closure (string event_name, GLib.Closure handler, bool use_capture);
 			public abstract bool dispatch_event (WebKit.DOM.Event event) throws GLib.Error;
 			public abstract bool remove_event_listener (string event_name, GLib.Closure handler, bool use_capture);

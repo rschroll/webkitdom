@@ -16,9 +16,8 @@ public class DOMServer : Object {
             el.append_child(document.create_text_node(@"$count"));
             el.set_attribute("style", @"background: $color; left: $x; top: $y;");
             el.set_attribute("id", @"$count");
-            // I can't figure out how to use add_event_listener_with_closure()...
-            //((WebKit.DOM.EventTarget) el).add_event_listener_with_closure("click",
-            //    (element, event) => { div_clicked(element.get_attribute("id")); }, false);
+            ((WebKit.DOM.EventTarget) el).add_event_listener("click", (Callback) on_div_clicked,
+                false, this);
             document.body.insert_before(el, null);
         } catch (Error error) {
             warning("Oh noes: %s", error.message);
@@ -37,6 +36,10 @@ public class DOMServer : Object {
     [DBus (visible = false)]
     public void on_page_created(WebKit.WebExtension extension, WebKit.WebPage page) {
         this.page = page;
+    }
+    
+    public static void on_div_clicked(WebKit.DOM.Element element, WebKit.DOM.Event event, DOMServer server) {
+        server.div_clicked(element.get_attribute("id"));
     }
 }
 
