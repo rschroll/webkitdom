@@ -1,6 +1,8 @@
 class DOMTestApp : Gtk.Application {
     
     public override void activate() {
+        WebKit.WebContext.get_default().set_web_extensions_directory("./");
+        
         var window = new Gtk.ApplicationWindow(this);
         window.set_default_size(400, 450);
         
