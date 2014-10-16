@@ -25,8 +25,7 @@ solution is easier but more limited than using a web extension.
 
 * **[extension][5]** uses the new WebExtension API to load a .so file
 into the web process to do the DOM manipulation.  This communicates over
-with the UI process over DBus.  **Please note that attaching to DOM
-events is not currently working.**
+with the UI process over DBus.
 
 [3]: https://github.com/rschroll/webkitdom/tree/master
 [4]: https://github.com/rschroll/webkitdom/tree/javascript
